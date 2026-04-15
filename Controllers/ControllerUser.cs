@@ -21,5 +21,21 @@ namespace MinimalCrud.Controller
             if(searchUser is null) return NotFound();
             return Ok(searchUser);
         }
+
+        [HttpPost]
+        public IActionResult CreateUser(User user)
+        {
+            if(user is null) return BadRequest();
+
+            var newUser = new User
+            {
+                Name = user.Name,
+                Email = user.Email
+            };
+
+            users.Add(newUser);
+
+            return Ok(newUser);
+        }
     }
 }
