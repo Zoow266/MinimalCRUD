@@ -50,5 +50,17 @@ namespace MinimalCrud.Controller
 
             return Ok(searchUpdateUser);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser(Guid id)
+        {
+            var deleteUser = users.FirstOrDefault(x => x.Id == id);
+
+            if(deleteUser is null) return NoContent();
+
+            users.Remove(deleteUser);
+
+            return Ok();
+        }
     }
 }
