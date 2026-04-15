@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MinimalCrud.DATA;
 using MinimalCrud.DTO;
 using MinimalCrud.Models;
@@ -15,18 +16,22 @@ namespace MinimalCrud.Controller
 
         // Получить всех пользователей
         [HttpGet]
-        public IActionResult GetUsers() => Ok(_context.Users.ToList());
+        public async Task<IActionResult> GetUsers()
+        {
+            var usersList = await _context.Users.ToListAsync();
+            return Ok(usersList);
+        }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserById(Guid id)
+        public async Task<IActionResult> GetUserById(Guid id)
         {
-            var searchUser = _context.Users.FirstOrDefault(x => x.Id == id);
+            var searchUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if(searchUser is null) return NotFound();
             return Ok(searchUser);
         }
 
         [HttpPost]
-        public IActionResult CreateUser(UserDTO userDTO)
+        public async Task<IActionResult> CreateUser(UserDTO userDTO)
         {
             if(userDTO is null) return BadRequest();
 
@@ -37,37 +42,37 @@ namespace MinimalCrud.Controller
                 Email = userDTO.Email
             };
 
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(newUser);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetUserById), new {id = newUser.Id}, newUser);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(Guid id, UpdateUserDTO updateUser)
+        public async Task<IActionResult> UpdateUser(Guid id, UpdateUserDTO updateUser)
         {
             if (updateUser is null) return BadRequest();
 
-            var searchUpdateUser = _context.Users.FirstOrDefault(x => x.Id == id);
+            var searchUpdateUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if(searchUpdateUser is null) return NotFound();
 
             if(!string.IsNullOrWhiteSpace(updateUser.Name)) searchUpdateUser.Name = updateUser.Name;
             if(!string.IsNullOrWhiteSpace(updateUser.Email)) searchUpdateUser.Email = updateUser.Email;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(searchUpdateUser);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            var deleteUser = _context.Users.FirstOrDefault(x => x.Id == id);
+            var deleteUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
             if(deleteUser is null) return NotFound();
 
             _context.Users.Remove(deleteUser);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
