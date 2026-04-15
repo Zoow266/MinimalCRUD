@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using MinimalCrud.DATA;
+using MinimalCrud.Services;
 
 var builer = WebApplication.CreateBuilder();
+
+builer.Services.AddScoped<IUserService, UserService>();
 
 builer.Services.AddControllers();
 
