@@ -1,6 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using Microsoft.EntityFrameworkCore;
+using MinimalCrud.DATA;
 
-app.MapGet("/", () => "Hello World!");
+var builer = WebApplication.CreateBuilder();
+
+builer.Services.AddControllers();
+
+builer.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=app.db"));
+
+var app = builer.Build();
+
+app.MapControllers();
 
 app.Run();
