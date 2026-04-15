@@ -37,5 +37,18 @@ namespace MinimalCrud.Controller
 
             return Ok(newUser);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(Guid id, User updateUser)
+        {
+            var searchUpdateUser = users.FirstOrDefault(x => x.Id == id);
+
+            if(searchUpdateUser is null) return BadRequest();
+
+            searchUpdateUser.Name = updateUser.Name;
+            searchUpdateUser.Email = updateUser.Email;
+
+            return Ok(searchUpdateUser);
+        }
     }
 }
