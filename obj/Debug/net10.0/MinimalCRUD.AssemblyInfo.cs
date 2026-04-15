@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MinimalCRUD")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62a692e5966ffa195773c5911ec69ba8d1838886")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad38122bd4ae6a25d69ec2af7cc9a08b17d5008c")]
 [assembly: System.Reflection.AssemblyProductAttribute("MinimalCRUD")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MinimalCRUD")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
