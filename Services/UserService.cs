@@ -10,7 +10,7 @@ namespace MinimalCrud.Services
         private readonly AppDbContext _context;
 
         public UserService(AppDbContext context) => _context = context;
-        public async Task<User> CreateAsync(UserDTO dto)
+        public async Task<UserResponseDTO> CreateAsync(UserDTO dto)
         {
             var newUser = new User
             {
@@ -22,7 +22,7 @@ namespace MinimalCrud.Services
             await _context.Users.AddAsync(newUser);
             await _context.SaveChangesAsync();
 
-            return newUser;
+            return Map(newUser);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -38,11 +38,19 @@ namespace MinimalCrud.Services
             return true;
         }
 
-        public async Task<List<User>> GetAllAsync() => await _context.Users.ToListAsync();
+        public async Task<List<UserResponseDTO>> GetAllAsync()
+        {
+            var userList = await _context.Users.ToListAsync();
+            return userList.Select(Map).ToList();
+        }
 
-        public async Task<User?> GetByIdAsync(Guid id) => await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<UserResponseDTO?> GetByIdAsync(Guid id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return user is null ? null : Map(user);
+        }
 
-        public async Task<User?> UpdateAsync(Guid id, UpdateUserDTO dto)
+        public async Task<UserResponseDTO?> UpdateAsync(Guid id, UpdateUserDTO dto)
         {
             var checkUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -54,7 +62,17 @@ namespace MinimalCrud.Services
 
             await _context.SaveChangesAsync();
 
-            return checkUser;
+            return Map(checkUser);
+        }
+
+        private static UserResponseDTO Map(User user)
+        {
+            return new UserResponseDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email
+            };
         }
     }
 }

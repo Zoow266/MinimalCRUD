@@ -5,11 +5,11 @@ namespace MinimalCrud.Services
 {
     public interface IUserService
     {
-        Task<List<User>> GetAllAsync();
-        Task<User?> GetByIdAsync(Guid id);
+        Task<List<UserResponseDTO>> GetAllAsync();
+        Task<UserResponseDTO?> GetByIdAsync(Guid id);
 
-        Task<User> CreateAsync(UserDTO dto);
-        Task<User?> UpdateAsync(Guid id, UpdateUserDTO dto);
+        Task<UserResponseDTO> CreateAsync(UserDTO dto);
+        Task<UserResponseDTO?> UpdateAsync(Guid id, UpdateUserDTO dto);
 
         Task<bool> DeleteAsync(Guid id);
     }
