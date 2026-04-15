@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MinimalCrud.DTO;
 using MinimalCrud.Models;
 
 namespace MinimalCrud.Controller
@@ -23,30 +24,31 @@ namespace MinimalCrud.Controller
         }
 
         [HttpPost]
-        public IActionResult CreateUser(User user)
+        public IActionResult CreateUser(UserDTO userDTO)
         {
-            if(user is null) return BadRequest();
+            if(userDTO is null) return BadRequest();
 
             var newUser = new User
             {
-                Name = user.Name,
-                Email = user.Email
+                Name = userDTO.Name,
+                Email = userDTO.Email
             };
 
             users.Add(newUser);
 
-            return Ok(newUser);
+            return CreatedAtAction(nameof(GetUserById), new {id = newUser.Id}, newUser);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(Guid id, User updateUser)
+        public IActionResult UpdateUser(Guid id, UpdateUserDTO updateUser)
         {
+            if (updateUser is null) return BadRequest();
+
             var searchUpdateUser = users.FirstOrDefault(x => x.Id == id);
+            if(searchUpdateUser is null) return NotFound();
 
-            if(searchUpdateUser is null) return BadRequest();
-
-            searchUpdateUser.Name = updateUser.Name;
-            searchUpdateUser.Email = updateUser.Email;
+            if(!string.IsNullOrWhiteSpace(updateUser.Name)) searchUpdateUser.Name = updateUser.Name;
+            if(!string.IsNullOrWhiteSpace(updateUser.Email)) searchUpdateUser.Email = updateUser.Email;
 
             return Ok(searchUpdateUser);
         }
@@ -56,11 +58,11 @@ namespace MinimalCrud.Controller
         {
             var deleteUser = users.FirstOrDefault(x => x.Id == id);
 
-            if(deleteUser is null) return NoContent();
+            if(deleteUser is null) return NotFound();
 
             users.Remove(deleteUser);
 
-            return Ok();
+            return NoContent();
         }
     }
 }
